@@ -2,22 +2,18 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>LogIn/Register | WildNotes</title>
+		<title>Login/Register | WildNotes</title>
 		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 	</head>
 	<body>
 		<div class="login">
-			<h1>LogIn/Register</h1>
+			<h1>Login/Register</h1>
 			<div class="links">
 				<a href="{{ url_for('login') }}" class="active">LogIn</a>
-				<a href="#">Register</a>
+				<a href="{{ url_for('register') }}">Register</a>
 			</div>
 			<form action="{{ url_for('login') }}" method="post">
-				<label for="name">
-					<i class="fas fa-user"></i>
-				</label>
-				<input type="text" name="name" placeholder="Name" id="name" required>
 				<label for="email">
 					<i class="fas fa-envelope"></i>
 				</label>

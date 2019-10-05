@@ -5,6 +5,7 @@ import MySQLdb.cursors
 import re
 
 app = Flask(__name__)
+app.secret_key = 'secretkey'
 
 #Databse connection details
 app.config['MYSQL_HOST'] = 'localhost'
@@ -42,3 +43,42 @@ def logout():
    session.pop('email', None)
    return redirect(url_for('login'))
 
+@app.route('/register/', methods=['GET', 'POST'])
+def register():
+    msg = ''
+    # Check if "username", "password" and "email" POST requests exist (user submitted form)
+    if request.method == 'POST' and 'email' in request.form and 'password' in request.form and 'name' in request.form:
+        name = request.form['name']
+        password = request.form['password']
+        email = request.form['email']
+        # Check if account exists using MySQL
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
+        account = cursor.fetchone()
+        # If account exists show error and validation checks
+        if account:
+            msg = 'Account already exists!'
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            msg = 'Invalid email address!'
+        elif not re.match(r'[A-Za-z0-9]+', name):
+            msg = 'Name must contain only characters and numbers!'
+        elif not name or not password or not email:
+            msg = 'Please fill out the form!'
+        else:
+            # Account doesnt exists and the form data is valid, now insert new account into accounts table
+            cursor.execute('INSERT INTO users VALUES (NULL, %s, %s, %s)', (email, password, name))
+            mysql.connection.commit()
+            msg = 'You have successfully registered!'
+    elif request.method == 'POST':
+        msg = 'Please fill out the form!'
+    # Show registration form with message (if any)
+    return render_template('register.html', msg=msg)
+
+@app.route('/pythonlogin/home')
+def home():
+    # Check if user is loggedin
+    if 'loggedin' in session:
+        # User is loggedin show them the home page
+        return render_template('home.html', username=session['username'])
+    # User is not loggedin redirect to login page
+    return redirect(url_for('login'))

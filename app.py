@@ -31,7 +31,7 @@ def login():
 			session['loggedin'] = True
 			session['id'] = user['id']
 			session['email'] = user['email']
-			return 'Logged In Successfully!'
+			return redirect(url_for('home'))
 		else:
 			msg = 'Invalid Credentials. Please Try Again!'
 	return render_template('login.html', msg=msg)
@@ -74,11 +74,24 @@ def register():
     # Show registration form with message (if any)
     return render_template('register.html', msg=msg)
 
-@app.route('/pythonlogin/home')
+@app.route('/home/')
 def home():
     # Check if user is loggedin
     if 'loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('home.html', username=session['username'])
+        return render_template('home.html', email=session['email'])
+    # User is not loggedin redirect to login page
+    return redirect(url_for('login'))
+
+@app.route('/profile/')
+def profile():
+    # Check if user is loggedin
+    if 'loggedin' in session:
+        # We need all the account info for the user so we can display it on the profile page
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM users WHERE id = %s', [session['id']])
+        account = cursor.fetchone()
+        # Show the profile page with account info
+        return render_template('profile.html', account=account)
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))

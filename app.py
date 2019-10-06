@@ -105,7 +105,7 @@ def deleteProfile():
 		msg = 'Account successfully deleted.'
 		return render_template('register.html', msg=msg)
 
-@app.route('/profile/editProfileView/', methods=['GET', 'POST'])
+@app.route('/profile/editProfile/', methods=['GET', 'POST'])
 def editProfileView():
 	if 'loggedin' in session:
 		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -113,7 +113,7 @@ def editProfileView():
 		account = cursor.fetchone()
 	return render_template('editProfileView.html', account=account)
 
-@app.route('/profile/editProfile/', methods=['GET', 'POST'])
+@app.route('/profile/', methods=['GET', 'POST'])
 def editProfile():
 	if 'loggedin' in session:
 		name = request.form['name']
@@ -124,11 +124,11 @@ def editProfile():
 		mysql.connection.commit()
 		return redirect(url_for('profile'))
 
-@app.route('/home/addnoteView/', methods=['GET','POST'])
+@app.route('/addnote/', methods=['GET','POST'])
 def addnoteView():
 	return render_template('addnoteView.html')
 
-@app.route('/home/addnote/', methods=['GET', 'POST'])
+@app.route('/home/', methods=['GET', 'POST'])
 def addnote():
 	if 'loggedin' in session:
 		note = request.form['note']
@@ -137,6 +137,15 @@ def addnote():
 		mysql.connection.commit()
 		flash('Note added suceesfully.')
 		return render_template('home.html')
+
+@app.route('/viewnotes/', methods=['GET','POST'])
+def viewnotes():
+	if 'loggedin' in session:
+		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+		cursor.execute('SELECT content FROM notes WHERE userid = %s', [session['id']])
+		data = cursor.fetchall()
+	return render_template('viewnotes.html', data=data)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

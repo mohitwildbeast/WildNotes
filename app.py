@@ -115,4 +115,11 @@ def editProfileView():
 
 @app.route('/profile/editProfile/', methods=['GET', 'POST'])
 def editProfile():
-	pass
+	if 'loggedin' in session:
+		name = request.form['name']
+		password = request.form['password']
+		email = request.form['email']
+		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+		cursor.execute('UPDATE users SET email=%s, password = %s, name = %s WHERE id = %s', [email, password, name, session['id']])
+		mysql.connection.commit()
+		return redirect(url_for('profile'))

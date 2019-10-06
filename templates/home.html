@@ -4,5 +4,19 @@
 
 {% block content %}
 <h2>Home</h2>
-<p>Welcome back, {{ email }}!</p>
+<table>
+	<tr>
+        <td>
+            <form action = "#" method="post">
+            <input type="submit" value="Add Note">
+            </form>
+        </td>
+        <td></td><td></td>
+        <td>
+            <form action = "#" method="post">
+            <input type="submit" value="View All Notes">
+            </form>
+        </td>
+    </tr>
+</table>
 {% endblock %}

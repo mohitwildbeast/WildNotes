@@ -123,3 +123,15 @@ def editProfile():
 		cursor.execute('UPDATE users SET email=%s, password = %s, name = %s WHERE id = %s', [email, password, name, session['id']])
 		mysql.connection.commit()
 		return redirect(url_for('profile'))
+
+@app.route('/home/addnote/', methods=['GET', 'POST'])
+def addnote():
+	if 'loggedin' in session:
+		note = request.form['note']
+		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+		cursor.execute('INSERT INTO notes VALUES (NULL, %s, %s)', (note, session['id']))
+		mysql.connection.commit()
+		return render_template('home.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)

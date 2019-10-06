@@ -8,4 +8,13 @@ CREATE TABLE IF NOT EXISTS `users` (
     `name` varchar(100) NOT NULL,
     PRIMARY KEY(`id`)
 	) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-    
+
+CREATE TABLE IF NOT EXISTS `notes` (
+	`noteid` int(10) NOT NULL AUTO_INCREMENT,
+    `content` varchar(1000) NOT NULL,
+    `userid` int(10) NOT NULL,
+    PRIMARY KEY(`noteid`),
+    CONSTRAINT FOREIGN KEY(`userid`) REFERENCES users(`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

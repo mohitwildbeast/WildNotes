@@ -105,5 +105,14 @@ def deleteProfile():
 		msg = 'Account successfully deleted.'
 		return render_template('register.html', msg=msg)
 
+@app.route('/profile/editProfileView/', methods=['GET', 'POST'])
+def editProfileView():
+	if 'loggedin' in session:
+		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+		cursor.execute('SELECT * FROM users WHERE id = %s', [session['id']])
+		account = cursor.fetchone()
+	return render_template('editProfileView.html', account=account)
+
 @app.route('/profile/editProfile/', methods=['GET', 'POST'])
 def editProfile():
+	pass

@@ -1,5 +1,5 @@
 #Import necessary libraries
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
@@ -124,6 +124,10 @@ def editProfile():
 		mysql.connection.commit()
 		return redirect(url_for('profile'))
 
+@app.route('/home/addnoteView/', methods=['GET','POST'])
+def addnoteView():
+	return render_template('addnoteView.html')
+
 @app.route('/home/addnote/', methods=['GET', 'POST'])
 def addnote():
 	if 'loggedin' in session:
@@ -131,6 +135,7 @@ def addnote():
 		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 		cursor.execute('INSERT INTO notes VALUES (NULL, %s, %s)', (note, session['id']))
 		mysql.connection.commit()
+		flash('Note added suceesfully.')
 		return render_template('home.html')
 
 if __name__ == '__main__':

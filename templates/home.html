@@ -7,15 +7,16 @@
 <table>
 	<tr>
         <td>
-            <form action = "#" method="post">
-            <input type="submit" value="Add Note">
-            </form>
+            <div class="links">
+                <a href="{{ url_for('addnoteView') }}">Add Note</a>  
+            </div>
         </td>
-        <td></td><td></td>
+        <td></td>
+        <td></td>
         <td>
-            <form action = "#" method="post">
-            <input type="submit" value="View All Notes">
-            </form>
+            <div class="links">
+                <a href="{{ url_for('register') }}">View All Notes</a>
+            </div>
         </td>
     </tr>
 </table>

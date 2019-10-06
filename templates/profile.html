@@ -19,6 +19,19 @@
             <td>Password:</td>
             <td>{{ account['password'] }}</td>
         </tr>
+        <tr>
+            <td>
+                <form action = "{{ url_for('editProfile') }}" method="post">
+                <input type="submit" value="Edit Profile">
+                </form>
+            </td>
+            <td>
+                <form action = "{{ url_for('deleteProfile') }}" method="post">
+                <input type="submit" value="Delete Profile">
+                </form>
+            </td>
+        </tr>
     </table>
 </div>
+
 {% endblock %}

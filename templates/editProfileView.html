@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block title %}Edit Profile | WildNotes{% endblock %}
+
+{% block content %}
+<h2>User Profile</h2>
+<form action = "{{ url_for('editProfile') }}" method="post">
+    <div>
+        <p>Edit your account details:</p>
+        <table style="border-spacing:0 10px;">
+            <tr>
+                <td>Name:</td>
+                <td><input type="text" name="name" value="{{ account['name'] }}" id="name" required></td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td><input type="text" name="email" value={{ account["email"] }} id="email" required></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input type="password" name="password" value={{ account["password"] }} id="password" required></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Save Changes">
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+
+{% endblock %}

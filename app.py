@@ -95,3 +95,15 @@ def profile():
         return render_template('profile.html', account=account)
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
+
+@app.route('/profile/deleteProfile/', methods=['GET', 'POST'])
+def deleteProfile():
+	if 'loggedin' in session:
+		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+		cursor.execute('DELETE FROM users WHERE id = %s', [session['id']])
+		mysql.connection.commit()
+		msg = 'Account successfully deleted.'
+		return render_template('register.html', msg=msg)
+
+@app.route('/profile/editProfile/', methods=['GET', 'POST'])
+def editProfile():

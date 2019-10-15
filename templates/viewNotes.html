@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block title %}View Notes | WildNotes{% endblock %}
+
+{% block content %}
+<h2>View Notes</h2>
+<form action = "{{ url_for('deleteNote') }}" method="post">
+    <div>
+        <p>Your notes are below:</p>
+        <table>
+            {% for item in data %}
+            <tr>
+                <!--<td>{{item['noteid']}}</td>-->
+                <td>{{item['content']}}</td>
+                <input type="hidden" name="noteid" value="{{item['noteid']}}" id="noteid">
+                <td><input type = "submit" value = "Delete Note"></td>
+                <!--<td>{{item['userid']}}</td>-->
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</form>
+{% endblock %}

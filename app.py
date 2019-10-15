@@ -22,7 +22,6 @@ def login():
 	if(request.method == 'POST' and 'email' in request.form and 'password' in request.form):
 		email = request.form['email']
 		password = request.form['password']
-		
 		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 		cursor.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email,password))
 		user = cursor.fetchone()
@@ -125,11 +124,11 @@ def editProfile():
 		return redirect(url_for('profile'))
 
 @app.route('/addnote/', methods=['GET','POST'])
-def addnoteView():
-	return render_template('addnoteView.html')
+def addNoteView():
+	return render_template('addNoteView.html')
 
 @app.route('/home/', methods=['GET', 'POST'])
-def addnote():
+def addNote():
 	if 'loggedin' in session:
 		note = request.form['note']
 		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -139,13 +138,22 @@ def addnote():
 		return render_template('home.html')
 
 @app.route('/viewnotes/', methods=['GET','POST'])
-def viewnotes():
+def viewNotes():
 	if 'loggedin' in session:
 		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-		cursor.execute('SELECT content FROM notes WHERE userid = %s', [session['id']])
+		cursor.execute('SELECT * FROM notes WHERE userid = %s', [session['id']])
 		data = cursor.fetchall()
-	return render_template('viewnotes.html', data=data)
+	return render_template('viewNotes.html', data=data)
 
+@app.route('/deletenote/', methods=['GET','POST'])
+def deleteNote():
+	if 'loggedin' in session:
+		noteid = request.form['noteid']
+		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+		cursor.execute('DELETE FROM notes WHERE noteid = %s', [noteid])
+		mysql.connection.commit()
+		flash('Note deleted suceesfully.')
+		return redirect(url_for('viewNotes'))
 
 if __name__ == '__main__':
     app.run(debug=True)

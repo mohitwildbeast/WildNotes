@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block title %}Edit Note | WildNotes{% endblock %}
+
+{% block content %}
+<h2>Edit Note</h2>
+<script>
+	function successMessage()
+	{
+		alert("Note successfully updated!");
+	}
+</script>
+
+<div>
+	<p> Edit note :</p>
+	<form action = "{{ url_for('editNote') }}" method="post" onSubmit="successMessage()">
+		<input type="hidden" name="noteid" value="{{note['noteid']}}" id="noteid">
+		<textarea name = 'note' rows="10" cols="40">{{note['content']}}</textarea>
+		<br><input type="submit" value="Edit Note">
+	</form>
+</div>
+{% endblock %}

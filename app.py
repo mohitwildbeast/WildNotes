@@ -16,6 +16,10 @@ app.config['MYSQL_DB'] = 'wildnotes'
 #Initilaize MySQL
 mysql = MySQL(app)
 
+@app.route('/')
+def index():
+	return render_template('index.html')
+
 @app.route('/login/', methods = ['GET', 'POST'])
 def login():
 	msg = ''
@@ -123,7 +127,7 @@ def editProfile():
 		mysql.connection.commit()
 		return redirect(url_for('profile'))
 
-@app.route('/addnote/', methods=['GET','POST'])
+@app.route('/notes/addnote/', methods=['GET','POST'])
 def addNoteView():
 	return render_template('addNoteView.html')
 
@@ -134,10 +138,9 @@ def addNote():
 		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 		cursor.execute('INSERT INTO notes VALUES (NULL, %s, %s)', (note, session['id']))
 		mysql.connection.commit()
-		flash('Note added suceesfully.')
 		return render_template('home.html')
 
-@app.route('/viewnotes/', methods=['GET','POST'])
+@app.route('/notes/viewnotes/', methods=['GET','POST'])
 def viewNotes():
 	if 'loggedin' in session:
 		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -145,14 +148,34 @@ def viewNotes():
 		data = cursor.fetchall()
 	return render_template('viewNotes.html', data=data)
 
-@app.route('/deletenote/', methods=['GET','POST'])
+@app.route('/notes/deletenote/', methods=['GET','POST'])
 def deleteNote():
 	if 'loggedin' in session:
 		noteid = request.form['noteid']
+		print(noteid)
 		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 		cursor.execute('DELETE FROM notes WHERE noteid = %s', [noteid])
 		mysql.connection.commit()
-		flash('Note deleted suceesfully.')
+		return redirect(url_for('viewNotes'))
+
+@app.route('/notes/editNoteView/', methods=['GET','POST'])
+def editNoteView():
+	if 'loggedin' in session:
+		noteid = request.form['noteid']
+		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+		cursor.execute('SELECT * FROM notes WHERE noteid = %s', [noteid])
+		note = cursor.fetchone()
+		print(note)
+	return render_template('editNoteView.html', note = note)
+
+@app.route('/notes/editnote/', methods=['GET','POST'])
+def editNote():
+	if 'loggedin' in session:
+		noteid = request.form['noteid']
+		note = request.form['note']
+		cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+		cursor.execute('UPDATE notes SET content = %s WHERE noteid = %s',[note,noteid])
+		mysql.connection.commit()
 		return redirect(url_for('viewNotes'))
 
 if __name__ == '__main__':
